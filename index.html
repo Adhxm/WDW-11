@@ -100,56 +100,66 @@
     <div class="counter">Tugas Aktif: <span id="count">0</span></div>
   </div>
 
-  <script>
-    $(document).ready(function () {
-      function updateCounter() {
-        const aktif = $("#taskList li").not(".selesai").length;
-        $("#count").text(aktif);
+<script>
+  $(document).ready(function () {
+    function updateCounter() {
+      const aktif = $("#taskList li").not(".selesai").length;
+      $("#count").text(aktif);
+    }
+
+    function addTask() {
+      const task = $("#taskInput").val().trim();
+      if (task !== "") {
+        const newTask = $("<li></li>").text(task);
+        const delBtn = $("<button class='hapus'>Hapus</button>");
+        newTask.append(delBtn);
+        $("#taskList").append(newTask.hide().fadeIn(500));
+        $("#taskInput").val("");
+        updateCounter();
       }
+    }
 
-      // Tambah tugas baru
-      $("#addTask").click(function () {
-        const task = $("#taskInput").val().trim();
-        if (task !== "") {
-          const newTask = $("<li></li>").text(task);
-          const delBtn = $("<button class='hapus'>Hapus</button>");
-          newTask.append(delBtn);
-          $("#taskList").append(newTask.hide().fadeIn(500));
-          $("#taskInput").val("");
-          updateCounter();
-        }
-      });
+    // Tambah tugas dengan klik tombol
+    $("#addTask").click(addTask);
 
-      // Tandai tugas selesai
-      $("#taskList").on("click", "li", function (e) {
-        if (!$(e.target).hasClass("hapus")) {
-          $(this).toggleClass("selesai");
-          updateCounter();
-        }
-      });
+    // Tambah tugas dengan menekan ENTER
+    $("#taskInput").keypress(function (e) {
+      if (e.which === 13) { // kode 13 = Enter
+        addTask();
+      }
+    });
 
-      // Hapus tugas dengan efek animasi
-      $("#taskList").on("click", ".hapus", function () {
-        $(this).parent().fadeOut(500, function () {
-          $(this).remove();
-          updateCounter();
-        });
-      });
+    // Tandai tugas selesai
+    $("#taskList").on("click", "li", function (e) {
+      if (!$(e.target).hasClass("hapus")) {
+        $(this).toggleClass("selesai");
+        updateCounter();
+      }
+    });
 
-      // Filter tugas
-      $(".filter-btn").click(function () {
-        const filter = $(this).data("filter");
-        if (filter === "all") {
-          $("#taskList li").fadeIn(300);
-        } else if (filter === "active") {
-          $("#taskList li").hide();
-          $("#taskList li").not(".selesai").fadeIn(300);
-        } else if (filter === "done") {
-          $("#taskList li").hide();
-          $("#taskList li.selesai").fadeIn(300);
-        }
+    // Hapus tugas dengan efek animasi
+    $("#taskList").on("click", ".hapus", function () {
+      $(this).parent().fadeOut(500, function () {
+        $(this).remove();
+        updateCounter();
       });
     });
-  </script>
+
+    // Filter tugas
+    $(".filter-btn").click(function () {
+      const filter = $(this).data("filter");
+      if (filter === "all") {
+        $("#taskList li").fadeIn(300);
+      } else if (filter === "active") {
+        $("#taskList li").hide();
+        $("#taskList li").not(".selesai").fadeIn(300);
+      } else if (filter === "done") {
+        $("#taskList li").hide();
+        $("#taskList li.selesai").fadeIn(300);
+      }
+    });
+  });
+</script>
+
 </body>
 </html>
